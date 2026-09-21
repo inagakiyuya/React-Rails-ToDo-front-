@@ -19,9 +19,15 @@ export interface Post {
 
 // ログイン・会員登録成功時にRailsから返ってくるデータの構造
 export interface AuthResponse {
-  token: string;
+  token: string | null;
   exp: string;
   email: string;
+}
+
+// ログイン時のUserを作成する時の入力データの型
+export interface LoginInput {
+  email: string;
+  password: string;
 }
 
 // Postを作成する時の入力データの型
