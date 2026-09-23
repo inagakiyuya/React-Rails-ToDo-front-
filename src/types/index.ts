@@ -19,7 +19,7 @@ export interface Post {
 
 // ログイン・会員登録成功時にRailsから返ってくるデータの構造
 export interface AuthResponse {
-  token: string | null;
+  token: string;
   exp: string;
   email: string;
 }

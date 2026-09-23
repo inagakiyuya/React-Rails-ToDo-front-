@@ -1,23 +1,53 @@
 import React, { createContext, useContext, useState } from 'react';
 import type { AuthResponse } from '../types';
 
-const AuthContext = createContext<AuthResponse | undefined>(undefined);
+type AuthContextValue = {
+  token: string | null;
+  exp: string | null;
+  email: string | null;
+  isAuthenticated: boolean;
+  login: (auth: AuthResponse) => void;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [exp, setExp] = useState<string | null>(localStorage.getItem('exp'));
+  const [email, setEmail] = useState<string | null>(localStorage.getItem('email'));
 
-  const login = (newToken: string) => {
-    localStorage.setItem('token', newToken);
-    setToken(newToken);
+  const login = ({ token, exp, email }: AuthResponse) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('exp', exp);
+    localStorage.setItem('email', email);
+
+    setToken(token);
+    setExp(exp);
+    setEmail(email);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('exp');
+    localStorage.removeItem('email');
+
     setToken(null);
+    setExp(null);
+    setEmail(null);
   };
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated: !!token, login, logout }}>
+    <AuthContext.Provider 
+      value={{ 
+        token, 
+        exp, 
+        email, 
+        isAuthenticated: !!token, // Derived from the presence of token
+        login, 
+        logout 
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
