@@ -75,6 +75,63 @@ const PostDetailPage = () => {
     }
   };
 
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (errorMessage && !title && !content) {
+    return (
+      <main>
+        <p role="alert">{errorMessage}</p>
+        <Link to="/posts">投稿一覧へ戻る</Link>
+      </main>
+    );
+  }
+
+  return (
+    <main>
+      <h1>投稿詳細・編集</h1>
+
+      <form onSubmit={handleUpdate}>
+        <div>
+          <label htmlFor="title">タイトル</label>
+          <input
+            id="title"
+            type="text"
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            disabled={isSubmitting}
+            required
+          />
+        </div>
+
+        <div>
+          <label htmlFor="content">内容</label>
+          <input
+            id="content"
+            type="text"
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            disabled={isSubmitting}
+            required
+          />
+        </div>
+
+        {errorMessage && <p role="alert">{errorMessage}</p>}
+        {successMessage && <p>{successMessage}</p>}
+
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? '更新中...' : '更新する'}
+        </button>
+      </form>
+
+      <button type="button" onClick={handleDelete} disabled={isSubmitting}>
+        投稿を削除する
+      </button>
+
+      <Link to="/posts">投稿一覧へ戻る</Link>
+    </main>
+  );
 };
 
 export default PostDetailPage;
